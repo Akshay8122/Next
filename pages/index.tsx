@@ -1,12 +1,13 @@
 import type { NextPage } from 'next'
+import Center from '../components/Center'
 import Sidebar from '../components/Sidebar'
 
 const Home: NextPage = () => {
   return (
-    <div className="bg-black h-screen overflow-hidden">
-      <main>
+    <div className="h-screen overflow-hidden bg-black">
+      <main className="flex">
         <Sidebar />
-        {/* Sidebar */}
+        <Center/> 
         {/* Center */}
       </main>
       <div>{/* Player */}</div>
