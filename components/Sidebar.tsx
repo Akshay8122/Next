@@ -32,14 +32,16 @@ function Sidebar() {
   console.log(playlists)
 
   return (
-    <div className="h-screen overflow-y-scroll border-r border-gray-900 p-5  text-sm text-gray-500  scrollbar-hide">
+    <div className="h-screen overflow-y-scroll border-r border-gray-900 p-5  text-xs text-gray-500 scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] lg:text-sm hidden md:inline-flex">
       <div className="space-y-4">
         <button
           className="flex items-center space-x-2 hover:text-white"
-          onClick={() => {
-            signOut()
-          }}
+          onClick={() => signOut()}
         >
+          <HomeIcon className="h-5 w-5" />
+          <p> Log out</p>
+        </button>
+        <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="h-5 w-5" />
           <p> Home</p>
         </button>

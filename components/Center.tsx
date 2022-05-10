@@ -20,7 +20,7 @@ function Center() {
   const spotifyApi = useSpotify()
   const [color, setColor] = useState(null)
   const playlistId = useRecoilValue(playlistIdState)
-  const [playlist, setPlaylist] = useRecoilState(playlistState)
+  const [playlist, setPlaylist] = useRecoilState<any>(playlistState)
 
   useEffect(() => {
     setColor(shuffle(colors).pop())
@@ -35,12 +35,12 @@ function Center() {
       })
       .catch((err) => console.log('something went wrong', err))
   }, [spotifyApi, playlistId])
-  console.log(playlist)
+  console.log(playlistId)
 
   return (
     <div className="flex flex-grow text-white">
       <header className="absolute top-5 right-8">
-        <div className="flex cursor-pointer items-center space-x-3 rounded-full bg-red-300 p-2 pr-5 opacity-90 hover:opacity-80">
+        <div className="flex cursor-pointer items-center space-x-3 rounded-full bg-black p-2 pr-5 text-white opacity-90 hover:opacity-80">
           <img
             className="h-10 w-10 rounded-full"
             src={session?.user?.image as string}
@@ -51,10 +51,20 @@ function Center() {
       </header>
 
       <section
-        className={`padding-8 flex h-80 w-full items-end space-x-7 bg-gradient-to-b ${color} to-black text-white`}
+        className={`flex h-80 w-full items-end space-x-7 bg-gradient-to-b p-8 ${color} to-black text-white`}
       >
-        <img src={playlist?.images[0]?.url} alt="" />
-        <h1>hello</h1>
+        <img
+          className="h-44 w-44 shadow-2xl"
+          src={playlist?.images?.[0]?.url}
+          alt=""
+        />
+
+        <div>
+          <p>PLAYLIST</p>
+          <h1 className="x1:text-5xl font text-2xl md:text-3xl">
+            {playlist?.name}
+          </h1>
+        </div>
       </section>
     </div>
   )
