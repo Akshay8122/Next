@@ -1,9 +1,10 @@
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { shuffle } from 'lodash'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { playlistIdState, playlistState } from '../atoms/playlistAtom'
 import useSpotify from '../hooks/useSpotify'
+import Songs from '../components/Songs'
 
 const colors: any = [
   'from-indigo-500',
@@ -38,9 +39,12 @@ function Center() {
   console.log(playlistId)
 
   return (
-    <div className="flex flex-grow text-white">
+    <div className="h-screen flex-grow overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
-        <div className="flex cursor-pointer items-center space-x-3 rounded-full bg-black p-2 pr-5 text-white opacity-90 hover:opacity-80">
+        <div
+          className="flex cursor-pointer items-center space-x-3 rounded-full bg-black p-2 pr-5 text-white opacity-90 hover:opacity-80"
+          onClick={signOut as any}
+        >
           <img
             className="h-10 w-10 rounded-full"
             src={session?.user?.image as string}
@@ -66,6 +70,9 @@ function Center() {
           </h1>
         </div>
       </section>
+      <div>
+        <Songs />
+      </div>
     </div>
   )
 }
