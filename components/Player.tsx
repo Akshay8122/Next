@@ -1,12 +1,19 @@
 import {
+  HeartIcon,
+  VolumeUpIcon as VolumeDownIcon,
+} from '@heroicons/react/outline'
+import {
+  PlayIcon,
+  VolumeUpIcon,
+  RewindIcon,
   FastForwardIcon,
   PauseIcon,
   ReplyIcon,
-  RewindIcon,
   SwitchHorizontalIcon,
-} from '@heroicons/react/outline'
+} from '@heroicons/react/solid'
+import { debounce } from 'lodash'
 import { useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { currentTrackIdState, isPlayingState } from '../atoms/songAtom'
 import useSongInfo from '../hooks/useSongInfo'
@@ -21,7 +28,7 @@ function Player() {
   const [volume, setVolume] = useState(50)
 
   const songInfo: any = useSongInfo()
-  console.log('THIS IS SONG INFO:', songInfo)
+  console.log('THIS IS SONG INFO:', isPlaying)
 
   const fetchCurrentSong = () => {
     if (!songInfo) {
@@ -38,7 +45,7 @@ function Player() {
 
   const handlePlayPause = () => {
     spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      if (data.body.is_playing) {
+      if (data?.body?.is_playing) {
         spotifyApi.pause()
         setIsPlaying(false)
       } else {
@@ -54,6 +61,19 @@ function Player() {
       setVolume(50)
     }
   }, [currentTrackIdState, spotifyApi, session])
+
+  useEffect(() => {
+    if (volume > 0 && volume < 100) {
+      debouncedAdjustVolume(volume)
+    }
+  }, [volume])
+
+  const debouncedAdjustVolume = useCallback(
+    debounce((volume) => {
+      spotifyApi.setVolume(volume).catch((err) => {})
+    }, 500),
+    []
+  )
 
   return (
     <div className="grid h-24 grid-cols-3 bg-gradient-to-b from-black to-gray-900 px-2 text-xs text-white md:px-8 md:text-base">
@@ -78,11 +98,35 @@ function Player() {
         {isPlaying ? (
           <PauseIcon onClick={handlePlayPause} className="button h-10 w-10" />
         ) : (
-          <PauseIcon onClick={handlePlayPause} className="button h-10 w-10" />
+          <PlayIcon onClick={handlePlayPause} className="button h-10 w-10" />
         )}
 
         <FastForwardIcon className="button" />
         <ReplyIcon className="button" />
+      </div>
+
+      {/* Right */}
+      <div className="flex items-center justify-end  space-x-3 pr-5 md:space-x-4">
+        <VolumeDownIcon
+          className="button"
+          onClick={() => {
+            volume > 0 && setVolume(volume - 10)
+          }}
+        />
+        <input
+          className="w-14 md:w-28"
+          value={volume}
+          type="range"
+          onChange={(e) => setVolume(Number(e.target.value))}
+          min={0}
+          max={100}
+        />
+        <VolumeUpIcon
+          className="button"
+          onClick={() => {
+            volume < 100 && setVolume(volume + 10)
+          }}
+        />
       </div>
     </div>
   )
