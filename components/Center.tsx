@@ -1,12 +1,12 @@
 import { signOut, useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { MouseEventHandler, useEffect, useState } from 'react'
 import { shuffle } from 'lodash'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { playlistIdState, playlistState } from '../atoms/playlistAtom'
 import useSpotify from '../hooks/useSpotify'
 import Songs from '../components/Songs'
 
-const colors: any = [
+const colors: string[] | any = [
   'from-indigo-500',
   'from-blue-500',
   'from-green-500',
@@ -23,15 +23,14 @@ function Center() {
   const playlistId = useRecoilValue(playlistIdState)
   const [playlist, setPlaylist] = useRecoilState<any>(playlistState)
 
-  useEffect(() => {
-    setColor(shuffle(colors).pop())
-  }, [playlistId])
+  console.log('playlist', playlist)
+
+  useEffect(() => setColor(shuffle(colors).pop()), [playlistId])
 
   useEffect(() => {
     spotifyApi
       .getPlaylist(playlistId)
       .then((data) => {
-        //@ts-ignore
         setPlaylist(data.body)
       })
       .catch((err) => console.log('something went wrong', err))
@@ -43,7 +42,7 @@ function Center() {
       <header className="absolute top-5 right-8">
         <div
           className="flex cursor-pointer items-center space-x-3 rounded-full bg-black p-2 pr-5 text-white opacity-90 hover:opacity-80"
-          onClick={signOut as any}
+          onClick={signOut as MouseEventHandler<HTMLDivElement>}
         >
           <img
             className="h-10 w-10 rounded-full"

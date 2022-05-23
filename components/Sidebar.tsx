@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/outline'
 import { HeartIcon } from '@heroicons/react/solid'
 import { signOut, useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { Key, useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { playlistIdState } from '../atoms/playlistAtom'
 import useSpotify from '../hooks/useSpotify'
@@ -15,32 +15,20 @@ import useSpotify from '../hooks/useSpotify'
 function Sidebar() {
   const spotifyApi = useSpotify()
   const { data: session, status } = useSession()
-  const [playlists, setPlaylists] = useState([])
+  const [playlists, setPlaylists] = useState<any>([])
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState)
-
-  // console.log('you picked plalist', playlistId)
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getUserPlaylists().then((data) => {
-        //@ts-ignore
         setPlaylists(data.body.items)
       })
     }
   }, [session, spotifyApi])
 
-  console.log(playlists)
-
   return (
     <div className="hidden h-screen overflow-y-scroll border-r border-gray-900  p-5 pb-36 text-xs text-gray-500 scrollbar-hide sm:max-w-[12rem] md:inline-flex lg:max-w-[15rem] lg:text-sm">
       <div className="space-y-4">
-        {/* <button
-          className="flex items-center space-x-2 hover:text-white"
-          onClick={() => signOut()}
-        >
-          <HomeIcon className="h-5 w-5" />
-          <p> Log out</p>
-        </button> */}
         <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="h-5 w-5" />
           <p> Home</p>
@@ -70,7 +58,7 @@ function Sidebar() {
 
         {/* Playlist... */}
 
-        {playlists.map((items: any) => (
+        {playlists.map((items: { id: any; name: string }) => (
           <p
             key={items.id}
             onClick={() => setPlaylistId(items.id)}

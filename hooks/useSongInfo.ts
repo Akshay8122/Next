@@ -5,16 +5,15 @@ import useSpotify from './useSpotify'
 
 function useSongInfo() {
   const spotifyApi = useSpotify()
-  const [currentIdTrack, setCurrenTrackId] = useRecoilState(currentTrackIdState)
-  const [songInfo, setSongInfo] = useState<any>(null)
-
-  // const demo =spotifyApi.getAccessToken();
+  const [currentIdTrack, setCurrenTrackId] =
+    useRecoilState<null>(currentTrackIdState)
+  const [songInfo, setSongInfo] = useState<null>(null)
 
   useEffect(() => {
     const fetchSongInfo = async () => {
       if (currentIdTrack) {
         const trackInfo = await fetch(
-          `https://api.spotify.com/v1/tracks/${currentIdTrack}`,
+          `https://api.spotify.com/v1/tracks/${currentIdTrack}?device_id="+this._device_id"`,
           {
             headers: {
               Authorization: `Bearer ${spotifyApi.getAccessToken()}`,

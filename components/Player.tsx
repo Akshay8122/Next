@@ -22,18 +22,16 @@ import useSpotify from '../hooks/useSpotify'
 function Player() {
   const spotifyApi = useSpotify()
   const { data: session, status } = useSession()
-  const [currentTrackId, setCurrentIdTrack] =
-    useRecoilState(currentTrackIdState)
+  const [currentTrackId, setCurrentIdTrack] =useRecoilState<null>(currentTrackIdState)
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState)
   const [volume, setVolume] = useState(50)
 
-  const songInfo: any = useSongInfo()
+  const songInfo:any = useSongInfo()
   console.log('THIS IS SONG INFO:', isPlaying)
 
   const fetchCurrentSong = () => {
     if (!songInfo) {
-      spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-        //@ts-ignore
+      spotifyApi.getMyCurrentPlayingTrack().then((data:any) =>  {
         setCurrentIdTrack(data.body?.item?.id)
 
         spotifyApi.getMyCurrentPlaybackState().then((data) => {
@@ -81,7 +79,6 @@ function Player() {
       <div className="flex items-center space-x-4">
         <img
           className="hidden h-10 w-10 md:inline"
-          //@ts-ignore
           src={songInfo?.album.images?.[0]?.url}
           alt=""
         />

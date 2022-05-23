@@ -1,4 +1,4 @@
-import type { NextPage } from 'next'
+ import type { NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import Center from '../components/Center'
 import Player from '../components/Player'
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 
 export default Home
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: object) {
   const session = await getSession(context)
 
   return {
